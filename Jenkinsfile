@@ -18,7 +18,21 @@ pipeline {
                     npm run build
                     ls -la
                 '''
+ 
+        
+        
             }
-        }
+
+        stage('Test') {
+            steps {
+                echo 'Testing ...'
+                sh '''
+                   test -f static/index.html || (echo "static/index.html not found" && exit 1)
+                   npm test 
+                '''
+                 }
+
+         }
+
     }
 }
