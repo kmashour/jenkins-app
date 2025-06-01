@@ -101,7 +101,7 @@ pipeline {
                     }
                 }
                 environment {
-                    BASE_URL = "https://${env.NETLIFY_SITE_ID}.netlify.app"
+                    CI_ENVIRONMENT_URL = "https://${env.NETLIFY_SITE_ID}.netlify.app"
                 }
 
                 steps {
