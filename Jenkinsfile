@@ -4,6 +4,7 @@ pipeline {
     environment {
         NETLIFY_SITE_ID = '9c18c736-54ce-442f-8b1c-d611c90fbee3'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+        REACT_APP_VERSION = "1.0.$BUILD_ID"
     }
 
     stages {
@@ -102,7 +103,7 @@ pipeline {
                     }
                 }
                 environment {
-                    CI_ENVIRONMENT_URL = "${env.MY_VAR}"
+                    CI_ENVIRONMENT_URL = "${env.MY_VAR}" // $env.MY_VAR This syntax is correct contains the deploy URL from the previous stage
                 }
                 steps {
                     sh '''
