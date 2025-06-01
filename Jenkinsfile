@@ -102,7 +102,7 @@ pipeline {
                     }
                 }
                 environment {
-                    CI_ENVIRONMENT_URL = ${env.MY_VAR}
+                    CI_ENVIRONMENT_URL = "${env.MY_VAR}"
                 }
                 steps {
                     sh '''
