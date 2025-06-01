@@ -7,6 +7,7 @@ pipeline {
     }
 
     stages {
+    
 
         stage('Build') {
             agent {
@@ -29,7 +30,7 @@ pipeline {
 
         stage('LocalTests') {
             parallel {
-                stage('Unit tests') {
+                stage('Local Unit tests') {
                     agent {
                         docker {
                             image 'node:18-alpine'
@@ -92,32 +93,31 @@ pipeline {
                     node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
                     
                 '''
-            }
+                script {
+                    env.MY_VAR=(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
+                }
         }
-        // node_modules/.bin/node-jq -r '.deploy_url' deploy-output.jso
-        //  stage('Staging E2E') {
-        //         agent {
-        //             docker {
-        //                 image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-        //                 reuseNode true
-        //             }
-        //         }
-        //         environment {
-        //             CI_ENVIRONMENT_URL = "https://bright-medovik-1ba41e.netlify.app"
-        //         }
-
-        //         steps {
-        //             sh '''
-        //                 npx playwright test  --reporter=html
-        //             '''
-        //         }
-
-        //         post {
-        //             always {
-        //                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Staging Playwright', reportTitles: '', useWrapperFileDirectly: true])
-        //             }
-        //         }
-        // }
+         stage('Staging E2E') {
+                agent {
+                    docker {
+                        image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                        reuseNode true
+                    }
+                }
+                environment {
+                    CI_ENVIRONMENT_URL = ${env.MY_VAR}
+                }
+                steps {
+                    sh '''
+                        npx playwright test  --reporter=html
+                    '''
+                }
+                post {
+                    always {
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Staging Playwright', reportTitles: '', useWrapperFileDirectly: true])
+                    }
+                }
+        }
 
 
         stage('Approval') {
