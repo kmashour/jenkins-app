@@ -7,8 +7,6 @@ pipeline {
     }
 
     stages {
-    
-
         stage('Build') {
             agent {
                 docker {
@@ -27,7 +25,6 @@ pipeline {
                 '''
             }
         }
-
         stage('LocalTests') {
             parallel {
                 stage('Local Unit tests') {
@@ -76,7 +73,6 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy Staging') {
             agent {
                 docker {
@@ -96,6 +92,7 @@ pipeline {
                 script {
                     env.MY_VAR=sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
                 }
+            }
         }
          stage('Staging E2E') {
                 agent {
@@ -118,8 +115,6 @@ pipeline {
                     }
                 }
         }
-
-
         stage('Approval') {
             steps {
                 timeout(time: 15, unit: 'MINUTES') {
@@ -168,4 +163,5 @@ pipeline {
                 }
         }
     }
+
 }
