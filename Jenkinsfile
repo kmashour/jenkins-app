@@ -94,7 +94,7 @@ pipeline {
                     
                 '''
                 script {
-                    env.MY_VAR=(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
+                    env.MY_VAR=sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
                 }
         }
          stage('Staging E2E') {
