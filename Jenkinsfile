@@ -101,7 +101,7 @@ pipeline {
                     }
                 }
                 environment {
-                    CI_ENVIRONMENT_URL = "https://${env.NETLIFY_SITE_ID}.netlify.app"
+                    CI_ENVIRONMENT_URL = "https://bright-medovik-1ba41e.netlify.app"
                 }
 
                 steps {
